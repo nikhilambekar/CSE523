@@ -33,7 +33,7 @@ var svg = d3.select("#scatter").append("svg")
 	.append("g")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
  
-d3.json("lib/data1.json", function(data) {
+d3.json("data/data1.json", function(data) {
 	x.domain([start_year, end_year]);
 	var xScale = d3.scale.linear()
 		.domain([start_year, end_year])

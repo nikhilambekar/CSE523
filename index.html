@@ -30,7 +30,7 @@
 	margin-right: auto;
 }
 
-#sparklines {
+.centerDiv {
 	display: table;
 	margin-left: auto;
 	margin-right: auto;
@@ -101,7 +101,7 @@
 	<!-- MAIN CONTENT -->
 	<div id="main_content_wrap" class="outer">
 		<section id="main_content" class="inner">
-			<div id='sparklines'>
+			<div id="sparklines" class="centerDiv">
 				<span class="inlinesparkline">1,4,4,7,5,9,10,4,4,7,5,9,10,4,4,7,5,9,10</span>
 				<span class="dynamicsparkline">Loading..</span> <span
 					class="dynamicbar">Loading..</span> <span class="inlinebar">1,3,4,5,3,5,4,4,7,5,9,10,4,4,7,5,9,10</span>
@@ -203,6 +203,8 @@
 					initialize();
 				}
 			</script>
+			<div id="scatter" class="centerDiv"></div>
+			<script src="javascripts/punchcard.js"></script>
 		</section>
 	</div>
 
