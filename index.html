@@ -55,6 +55,8 @@
 <script src="http://d3js.org/d3.v3.min.js"></script>
 <script type="text/javascript" src="javascripts/stream_layers.js"></script>
 <script type="text/javascript" src="javascripts/nv.d3.js"></script>
+<script src="http://code.highcharts.com/highcharts.js"></script>
+<script src="http://code.highcharts.com/modules/exporting.js"></script>
 <script type="text/javascript">
 	$(function() {
 		/** This code runs when everything has been loaded on the page */
@@ -79,6 +81,30 @@
 			barColor : 'red'
 		});
 	});
+</script>
+
+<script>
+	function getAddress(lat, longitude) {
+		var geocodingAPI = "http://maps.googleapis.com/maps/api/geocode/json?latlng="
+				+ lat + "," + longitude + "&sensor=true";
+		var address = null;
+
+		$.ajax({
+			url : geocodingAPI,
+			async : false,
+			dataType : 'json',
+			success : function(json) {
+				try {
+					address = json.results[0].formatted_address;
+				} catch (err) {
+					address = "";
+					console.log(err.message);
+				}
+
+			}
+		});
+		return address;
+	}
 </script>
 
 <script
@@ -153,9 +179,79 @@
 						center : new google.maps.LatLng(40.764213, 0.00196),
 						//tileSize : new google.maps.Size(256, 256),
 						rotateControl : false,
-						scrollwheel : false
-					//zoomControl : false,
-					//draggable : false
+						scrollwheel : false,styles : [ {
+							"featureType" : "road",
+							"elementType" : "geometry",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "poi",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "poi.park",
+							"elementType" : "geometry.fill",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "landscape",
+							"elementType" : "geometry",
+							"stylers" : [ {
+								"color" : "#fffffa"
+							} ]
+						}, {
+							"featureType" : "water",
+							"elementType" : "labels",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "road",
+							"elementType" : "labels",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "transit",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "administrative.country",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "simplified"
+							} ]
+						}, {
+							"featureType" : "administrative.province",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "simplified"
+							} ]
+						}, {
+							"featureType" : "administrative.locality",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "administrative.neighborhood",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						}, {
+							"featureType" : "administrative.land_parcel",
+							"elementType" : "all",
+							"stylers" : [ {
+								"visibility" : "off"
+							} ]
+						} ]
+					
 					};
 
 					map = new google.maps.Map(document
@@ -168,7 +264,8 @@
 									parseFloat(pointArray[i][1]),
 									parseFloat(pointArray[i][2])),
 							map : map,
-							title : pointArray[i][0]
+							title : title : "IP : "+pointArray[i][0] + "</br>"
+							+ "Location : "+getAddress(pointArray[i][1], pointArray[i][2])
 						});
 						(function(marker, i) {
 							// add click event
@@ -188,16 +285,7 @@
 					}
 					var markerCluster = new MarkerClusterer(map, taxiData);
 
-					/* 
-					 var pointArray = new google.maps.MVCArray(taxiData);
-
-					 heatmap = new google.maps.visualization.HeatmapLayer({
-					 data : pointArray
-					 });
-					 heatmap.set('radius',5);
-
-					 heatmap.setMap(map);
-					 */}
+					}
 
 				function loadMap() {
 					/* google.maps.event.addDomListener(window, 'load', initialize); */
@@ -206,6 +294,144 @@
 			</script>
 			<div id="scatter" class="centerDiv" ></div>
 			<script src="javascripts/punchcard.js"></script>
+			
+			<div id="containerHigh" style="width: 800px; height: 400px; margin: 0 auto"></div>
+			<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+    
+        var colors = Highcharts.getOptions().colors,
+            categories = ['192.168.0.1', '192.168.0.2', '192.168.0.3', '192.168.0.4', '192.168.0.5'],
+            name = 'Source IP',
+            data = [{
+                    y: 291,
+                    color: colors[0],
+                    drilldown: {
+                        name: '192.168.0.1',
+                        categories: ['80', '443', '5050', '1755'],
+                        data: [26, 91, 46, 128],
+                        color: colors[0]
+                    }
+                }, {
+                    y: 494,
+                    color: colors[1],
+                    drilldown: {
+                        name: '192.168.0.2',
+                        categories: ['80', '443', '5050', '1755'],
+                        data: [48, 75, 148, 223],
+                        color: colors[1]
+                    }
+                }, {
+                    y: 188,
+                    color: colors[2],
+                    drilldown: {
+                        name: '192.168.0.3',
+                        categories: ['80', '443', '5050', '1755'],
+                        data: [98, 12, 55, 23],
+                        color: colors[2]
+                    }
+                }, {
+                    y: 1379,
+                    color: colors[3],
+                    drilldown: {
+                        name: '192.168.0.4',
+                        categories: ['80', '443', '5050', '1755'],
+                        data: [128, 248, 547, 456],
+                        color: colors[3]
+                    }
+                }, {
+                    y: 578,
+                    color: colors[4],
+                    drilldown: {
+                        name: '192.168.0.5',
+                        categories:['80', '443', '5050', '1755'],
+                        data: [ 147, 128, 178, 125],
+                        color: colors[4]
+                    }
+                }]
+            ;
+    
+        function setChart(name, categories, data, color) {
+			chart.xAxis[0].setCategories(categories, false);
+			chart.series[0].remove(false);
+			chart.addSeries({
+				name: name,
+				data: data,
+			}, false);
+			chart.redraw();
+        }
+    
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'containerHigh',
+                type: 'line'
+            },
+            title: {
+                text: 'Ip Traffic Analysis'
+            },
+            legend:{
+                enabled:false
+            },
+            xAxis: {
+                categories: categories
+            },
+            yAxis: {
+                title: {
+                    text: 'Count'
+                }
+            },
+            plotOptions: {
+                line: {
+                    cursor: 'pointer',
+                    point: {
+                        events: {
+                            click: function() {
+                                var drilldown = this.drilldown;
+                                if (drilldown) { // drill down
+                                    setChart(drilldown.name, drilldown.categories, drilldown.data, drilldown.color);
+                                } else { // restore
+                                    setChart(name, categories, data);
+                                }
+                            }
+                        }
+                    },
+                    dataLabels: {
+                        enabled: true,
+                        color: colors[1],/* ,
+                        style: {
+                            fontWeight: 'bold'
+                        }, */
+                        formatter: function() {
+                            return this.y +' Packets';
+                        }
+                    }
+                }
+            },
+            tooltip: {
+                formatter: function() {
+                    var point = this.point,
+                        s = this.x +':<b>'+ this.y +' packets';
+                    if (point.drilldown) {
+                        s += '<br>Click to view '+ point.category +' detailed port details';
+                    } else {
+                        s += '<br>Click to return to IP Address';
+                    }
+                    return s;
+                }
+            },
+            series: [{
+                name: name,
+                data: data
+            }],
+            exporting: {
+                enabled: false
+            }
+        });
+    });
+    
+});
+</script>
 		</section>
 	</div>
 
